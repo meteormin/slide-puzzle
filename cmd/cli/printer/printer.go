@@ -11,14 +11,13 @@ type Printer struct {
 	w *bufio.Writer
 }
 
-func (p *Printer) HandleReset(titles [][]int, size int) error {
+func (p *Printer) HandleReset(tiles [][]int, size int) error {
 	err := p.Clear()
 	_, err = fmt.Fprintf(p.w, "New Puzzle of size %d\n", size)
 	if err != nil {
 		return err
 	}
-
-	return p.WriteTiles(titles)
+	return p.WriteTiles(tiles)
 }
 
 func (p *Printer) HandleMove(tiles [][]int, _ core.Direction) error {

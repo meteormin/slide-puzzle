@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/meteormin/slide-puzzle/cmd/cli/printer"
 	"github.com/meteormin/slide-puzzle/internal/core"
+	"github.com/meteormin/slide-puzzle/internal/counter"
 	"github.com/meteormin/slide-puzzle/internal/logger"
+	"github.com/meteormin/slide-puzzle/internal/timer"
 	"golang.org/x/term"
 	"os"
 	"strconv"
@@ -44,9 +46,15 @@ func main() {
 	}
 
 	l := logger.New()
-	container.AddListener(logger.NewListener(l))
+	ll := logger.NewListener(l)
 	p := printer.NewPrinter()
+	c := counter.New()
+	t := timer.New()
+
+	container.AddListener(ll)
 	container.AddListener(p)
+	container.AddListener(c)
+	container.AddListener(t)
 	container.ErrorHandler(func(err error) {
 		l.Error(err)
 	})
@@ -57,7 +65,8 @@ func main() {
 		fmt.Print("\033[2J")   // 전체 화면 지움
 		fmt.Print("\033[5;1H") // 커서를 5행 1열로 이동
 
-		err = p.WriteTiles(container.Snapshot())
+		tiles := container.Snapshot()
+		err = p.WriteTiles(tiles)
 		if err != nil {
 			l.Error(err)
 			fmt.Println("⚠️ 퍼즐을 출력하는 중 오류가 발생했습니다.")
@@ -66,6 +75,9 @@ func main() {
 
 		if container.IsSolved() {
 			fmt.Println("🎉 퍼즐을 완성했습니다!")
+			fmt.Printf("퍼즐 크기: %d", len(tiles))
+			fmt.Printf(" | 이동 횟수: %d", c.Count())
+			fmt.Printf(" | 소요 시간: %.2fs\n", t.Elapsed().Seconds())
 			fmt.Println("[s = 다시 셔플 | r = 크기 변경 리셋 | q = 종료]")
 		}
 

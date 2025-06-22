@@ -11,7 +11,7 @@ type Listener interface {
 	HandleMove(tiles [][]int, direction Direction) error
 	HandleSolved(tiles [][]int) error
 	HandleShuffle(tiles [][]int, moves int) error
-	HandleReset(titles [][]int, size int) error
+	HandleReset(tiles [][]int, size int) error
 }
 
 type Container struct {
