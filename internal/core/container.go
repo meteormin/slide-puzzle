@@ -2,20 +2,35 @@ package core
 
 type ContainerInterface interface {
 	BoardInterface
+	Reset(size int) error
 	AddListener(listener Listener)
 	ErrorHandler(handler func(error))
 }
 
 type Listener interface {
 	HandleMove(tiles [][]int, direction Direction) error
-	HandleSolve(tiles [][]int) error
+	HandleSolved(tiles [][]int) error
 	HandleShuffle(tiles [][]int, moves int) error
+	HandleReset(titles [][]int, size int) error
 }
 
 type Container struct {
 	board        BoardInterface
 	listeners    []Listener
 	errorHandler func(error)
+}
+
+func (c *Container) Reset(size int) error {
+	if size < 2 {
+		return ErrInvalidSize
+	}
+	c.board = NewBoard(size)
+	for _, listener := range c.listeners {
+		if err := listener.HandleReset(c.Snapshot(), size); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (c *Container) Snapshot() [][]int {
@@ -37,6 +52,8 @@ func (c *Container) MoveBy(direction Direction) bool {
 		if err != nil {
 			c.errorHandler(err)
 		}
+	} else {
+		c.errorHandler(ErrInvalidDirection)
 	}
 	return moved
 }
@@ -44,7 +61,7 @@ func (c *Container) MoveBy(direction Direction) bool {
 func (c *Container) IsSolved() bool {
 	solved := c.board.IsSolved()
 	if solved {
-		err := c.onSolve(c.Snapshot())
+		err := c.onSolved(c.Snapshot())
 		if err != nil {
 			c.errorHandler(err)
 		}
@@ -69,9 +86,9 @@ func (c *Container) onMove(titles [][]int, direction Direction) error {
 	return nil
 }
 
-func (c *Container) onSolve(tiles [][]int) error {
+func (c *Container) onSolved(tiles [][]int) error {
 	for _, listener := range c.listeners {
-		if err := listener.HandleSolve(tiles); err != nil {
+		if err := listener.HandleSolved(tiles); err != nil {
 			return err
 		}
 	}
@@ -87,8 +104,9 @@ func (c *Container) onShuffle(tiles [][]int, moves int) error {
 	return nil
 }
 
-func New(size int) ContainerInterface {
-	return &Container{
-		board: NewBoard(size),
+func New(size int) (ContainerInterface, error) {
+	if size < 2 {
+		return nil, ErrInvalidSize
 	}
+	return &Container{board: NewBoard(size)}, nil
 }

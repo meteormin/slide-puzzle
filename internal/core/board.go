@@ -15,6 +15,21 @@ const (
 	Right
 )
 
+func (direction Direction) String() string {
+	switch direction {
+	case Up:
+		return "Up"
+	case Down:
+		return "Down"
+	case Left:
+		return "Left"
+	case Right:
+		return "Right"
+	default:
+		return "Unknown"
+	}
+}
+
 type BoardInterface interface {
 	MoveBy(dir Direction) bool
 	IsSolved() bool
@@ -39,8 +54,9 @@ func (b *Board) MoveBy(dir Direction) bool {
 		return b.move(1, 0)
 	case Right:
 		return b.move(-1, 0)
+	default:
+		return false
 	}
-	return false
 }
 
 func (b *Board) move(dx, dy int) bool {
