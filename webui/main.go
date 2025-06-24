@@ -13,7 +13,7 @@ func alertCallback(this js.Value, p []js.Value) interface{} {
 }
 
 func main() {
-	c := make(chan struct{}, 0)
+	c := make(chan struct{})
 
 	// 버튼에 이벤트 핸들러 등록
 	document := js.Global().Get("document")

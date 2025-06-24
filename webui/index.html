@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Slide Puzzle UI</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@webtui/css@0.0.5/dist/full.css"
+    />
+    <style>
+        @layer base {
+            :root {
+                /* Accent Colors */
+                --rosewater: #f5e0dc;
+                --flamingo: #f2cdcd;
+                --pink: #f5c2e7;
+                --mauve: #cba6f7;
+                --red: #f38ba8;
+                --maroon: #eba0ac;
+                --peach: #fab387;
+                --yellow: #f9e2af;
+                --green: #a6e3a1;
+                --teal: #94e2d5;
+                --sky: #89dceb;
+                --sapphire: #74c7ec;
+                --blue: #89b4fa;
+                --lavender: #b4befe;
+
+                /* Background / Foreground Colors */
+                --text: #cdd6f4;
+                --subtext1: #bac2de;
+                --subtext0: #a6adc8;
+                --overlay2: #9399b2;
+                --overlay1: #7f849c;
+                --overlay0: #6c7086;
+                --surface2: #585b70;
+                --surface1: #45475a;
+                --surface0: #313244;
+                --base: #1e1e2e;
+                --mantle: #181825;
+                --crust: #11111b;
+
+                --background0: var(--base);
+                --background1: var(--surface0);
+                --background2: var(--surface1);
+                --background3: var(--surface2);
+
+                --foreground0: var(--text);
+                --foreground1: var(--subtext1);
+                --foreground2: var(--overlay2);
+            }
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #game-title {
+            margin-bottom: 14px;
+        }
+
+        #game-controls {
+            margin-bottom: 14px;
+        }
+
+        #game-info {
+            /* 게임 정보 영역 */
+        }
+
+        #puzzle-board {
+            /* 예시: 4x4 격자 */
+            width: 240px;
+            height: 240px;
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        #reset-button {
+            height: 30px;
+            width: 100px;
+        }
+
+        .tile {
+            width: 60px;
+            height: 60px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            text-align: center;
+            line-height: 60px;
+            font-weight: bold;
+        }
+
+        .empty {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1 id="game-title">🧩 Slide Puzzle Game</h1>
+
+    <!-- 컨트롤 영역 -->
+    <section id="game-controls" aria-label="게임 컨트롤">
+        <label for="level-select">퍼즐 사이즈:</label>
+        <select id="level-select">
+            <option value="3">3 x 3</option>
+            <option value="4" selected>4 x 4</option>
+            <option value="5">5 x 5</option>
+        </select>
+
+        <button id="reset-button" variant-="sky">🔄 리셋</button>
+    </section>
+
+    <!-- 게임 상태 정보 -->
+    <section id="game-info" aria-label="게임 정보">
+        <div id="move-count-label">
+            <strong>이동 횟수: </strong>
+            <span id="move-count">0</span>
+        </div>
+        <div id="start-time-label">
+            <strong>시작 시간: </strong>
+            <span id="start-time">-</span>
+        </div>
+        <div id="end-time-label">
+            <strong>완성 시간: </strong>
+            <span id="end-time">-</span>
+        </div>
+    </section>
+
+    <!-- 게임 보드 영역 -->
+    <section id="puzzle-board" aria-label="슬라이드 퍼즐 영역">
+        <!-- 퍼즐 타일들이 JS로 삽입됨 -->
+        <div class="tile">1</div>
+        <div class="tile">2</div>
+        <div class="tile">3</div>
+        <div class="tile">4</div>
+        <div class="tile">5</div>
+        <div class="tile">6</div>
+        <div class="tile">7</div>
+        <div class="tile">8</div>
+        <div class="tile">9</div>
+        <div class="tile">10</div>
+        <div class="tile">11</div>
+        <div class="tile">12</div>
+        <div class="tile">13</div>
+        <div class="tile">14</div>
+        <div class="tile">15</div>
+        <div class="tile empty"></div> <!-- 빈칸 -->
+    </section>
+</main>
+
+<script src="wasm_exec.js"></script>
+<script>
+    const go = new Go(); // wasm_exec.js에서 제공됨
+    WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+        go.run(result.instance);
+    });
+</script>
+</body>
+</html>

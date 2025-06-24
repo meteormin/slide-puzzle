@@ -81,20 +81,20 @@ func main() {
 			fmt.Println("[s = 다시 셔플 | r = 크기 변경 리셋 | q = 종료]")
 		}
 
-		fmt.Print("[w/a/s/d = 이동 | r = 리셋 | q = 종료] > ")
+		fmt.Print("[w,k/a,h/s,j/d,l = 이동 | r = 리셋 | q = 종료] > ")
 		input, _ := readKey()
 		switch input {
-		case 'w':
+		case 'w', 'k':
 			container.MoveBy(core.Up)
-		case 's':
+		case 's', 'j':
 			if container.IsSolved() {
 				container.Shuffle(shuffleMoves)
 			} else {
 				container.MoveBy(core.Down)
 			}
-		case 'a':
+		case 'a', 'h':
 			container.MoveBy(core.Left)
-		case 'd':
+		case 'd', 'l':
 			container.MoveBy(core.Right)
 		case 'r':
 			fmt.Print("새 보드 크기 입력 (예: 3) > ")
