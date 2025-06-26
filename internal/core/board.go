@@ -35,6 +35,7 @@ type BoardInterface interface {
 	IsSolved() bool
 	Shuffle(moves int)
 	Snapshot() [][]int
+	EmptyTile() (x int, y int)
 }
 
 type Board struct {
@@ -102,6 +103,10 @@ func (b *Board) Snapshot() [][]int {
 		copy(cp[i], b.Tiles[i])
 	}
 	return cp
+}
+
+func (b *Board) EmptyTile() (x int, y int) {
+	return b.emptyX, b.emptyY
 }
 
 func (b *Board) Print() {
