@@ -3,10 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/meteormin/slide-puzzle/cmd/cli/printer"
 	"github.com/meteormin/slide-puzzle/internal/core"
 	"github.com/meteormin/slide-puzzle/internal/counter"
 	"github.com/meteormin/slide-puzzle/internal/logger"
+	"github.com/meteormin/slide-puzzle/internal/printer"
 	"github.com/meteormin/slide-puzzle/internal/timer"
 	"golang.org/x/term"
 	"os"

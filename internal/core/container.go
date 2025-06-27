@@ -20,6 +20,10 @@ type Container struct {
 	errorHandler func(error)
 }
 
+func (c *Container) EmptyTile() (x int, y int) {
+	return c.board.EmptyTile()
+}
+
 func (c *Container) Reset(size int) error {
 	if size < 2 {
 		return ErrInvalidSize
